@@ -1,0 +1,30 @@
+{
+    "name": "znframework/package-hypertext",
+    "description": "ZN Framework Hypertext Package",
+    "license": "MIT",
+    "homepage": "https://znframework.com",
+    "keywords": ["znframework", "hypertext", "html", "form"],
+    "authors": [
+        {
+            "name": "Ozan Uykun",
+            "email": "ozan@znframework.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "znframework/package-zerocore": "5.0.*",
+        "znframework/package-datatypes": "5.0.*",
+        "znframework/package-buffering": "5.0.*",
+        "znframework/package-protection": "5.0.*",
+        "znframework/package-authorization": "5.0.*",
+        "znframework/package-database": "5.0.*",
+        "znframework/package-validation": "5.0.*",
+        "znframework/package-storage": "5.0.*"
+	},
+    "autoload": {
+        "psr-4": {
+            "ZN\\Helpers\\": ""
+        }
+    },
+	"minimum-stability": "dev"
+}
