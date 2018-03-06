@@ -298,7 +298,7 @@ trait FormElementsTrait
             }
             else
             {
-                $default = Singleton::class('ZN\Validation\Data')->postBack($name, $method);
+                $default = Singleton::class('ZN\Validation\Data')->postBack($name, $method) ?: $default;
             }   
         }
     }
