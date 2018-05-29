@@ -1,4 +1,4 @@
-<h2>ZN Framework Database Package</h2>
+<h2>ZN Framework Hypertext Package</h2>
 <p>
 Follow the steps below for installation and use.
 </p>
