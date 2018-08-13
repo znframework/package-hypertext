@@ -9,8 +9,10 @@
  * @author  Ozan UYKUN [ozan@znframework.com]
  */
 
+use ZN\Base;
 use ZN\Classes;
 use ZN\Datatype;
+use ZN\Inclusion;
 use ZN\Authorization;
 use ZN\DataTypes\Arrays;
 use ZN\Hypertext\Exception\PermissionRoleIdException;
@@ -199,6 +201,131 @@ trait ViewCommonTrait
         $this->settings['attr'] = [];
 
         return $this->_input($name, $value, $attributes, $type);
+    }
+
+    /**
+     * Open modal
+     * 
+     * @param string $selector
+     * 
+     * @return this
+     */
+    public function modal(String $selector)
+    {
+        $this->settings['attr']['data-toggle'] = 'modal';
+        $this->settings['attr']['data-target'] = Base::prefix($selector, '#');
+
+        return $this;
+    }
+
+    /**
+     * Generate modal box
+     * 
+     * @param string $id
+     * @param array  $data
+     * 
+     * @return string
+     */
+    public function modalbox(String $id, Array $data = [])
+    {
+        $data = 
+        [
+            'modalId'             => $id,
+            'modalHeader'         => $this->settings['attr']['modal-header'         ] ?? NULL,
+            'modalBody'           => $this->settings['attr']['modal-body'           ] ?? NULL,
+            'modalFooter'         => $this->settings['attr']['modal-footer'         ] ?? NULL,
+            'modalDissmissButton' => $this->settings['attr']['modal-dissmiss-button'] ?? NULL
+        ];
+
+        $this->settings['attr'] = [];
+
+        return $this->getModalResource('standart', $data);
+    }
+
+    /**
+     * Serilize form into controller
+     * 
+     * @param string          $url
+     * @param string|callable $selector
+     * @param string|array    $datatype|$properties
+     */
+    public function serializer(String $url, $selector = '.modal-body', $datatype = 'standart')
+    {
+        $selector = is_string($selector)
+                  ? ($this->settings['attr']['data-target'] ?? NULL) . Base::prefix($selector, ' ')
+                  : $selector;
+
+        return $this->trigger('click', $url, $selector, $datatype, 'serializer');
+    }
+
+    /**
+     * Trigger controller
+     * 
+     * @param string          $event
+     * @param string          $url
+     * @param string|callable $selector
+     * @param string|array    $datatype|$properties
+     */
+    public function trigger(String $event, String $url, $selector, $datatype = 'standart', $resource = 'trigger')
+    {
+        $this->convertSerializerDataType($datatype);
+
+        $data = 
+        [
+            'serializerUrl'       => $url,
+            'serializerSelector'  => $selector,
+            'serializerFunction'  => $function = $resource . md5(uniqid()),
+            'serializerProperties'=> $this->transferAttributesAndUnset('serializer', 'properties')
+        ];
+
+        $this->settings['attr'][Base::prefix($event, 'on')] = $function . '(this)';
+
+        echo $this->getAjaxResource($resource, $data);
+
+        return $this;
+    }
+
+    /**
+     * Protected convert serializeer data type
+     */
+    protected function convertSerializerDataType($datatype)
+    {
+        if( $datatype === 'json' )
+        {
+            $this->settings['serializer']['properties'] = 'dataType:"json",' . EOL;
+        }
+        elseif( is_array($datatype) )
+        {
+            $this->settings['serializer']['properties'] = rtrim(ltrim(json_encode($datatype), '{'), '}') . ',' . PHP_EOL;
+        }
+    }
+
+    /**
+     * Protected transfer attributes and unset
+     */
+    protected function transferAttributesAndUnset($type, $attr)
+    {
+        $return = $this->settings[$type][$attr] ?? NULL;
+
+        unset($this->settings[$type][$attr]);
+
+        return $return;
+    }
+
+    /**
+     * Protected get modal resource
+     */
+    protected function getModalResource(String $resources = 'standart', $data, $directory = 'Modals')
+    {
+        return Inclusion\View::use($resources, $data, true, __DIR__ . '/Resources/' . $directory . '/');
+    }
+
+    /**
+     * Protected get modal resource
+     */
+    protected function getAjaxResource(String $resources = 'serializer', $data)
+    {
+        return $this->getModalResource($resources, $data, 'Ajax');
     }
 
     /**
