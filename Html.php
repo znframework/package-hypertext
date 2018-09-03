@@ -23,8 +23,13 @@ class Html
     [
         'multiElement' =>
         [
-            'html'  , 'body', 'head'  , 'title' , 'pre' ,
-            'iframe', 'li'  , 'strong', 'button', 'span',
+            'html'   , 'body'      , 'head'    , 'title'    , 'pre'    ,
+            'iframe' , 'li'        , 'strong'  , 'button'   , 'span'   ,
+            'div'    , 'canvas'    , 'command' , 'datalist' , 'details',
+            'dialog' , 'figcaption', 'figure'  , 'mark'     , 'meter'  ,
+            'time'   , 'summary'   , 'progress', 'output'   , 'hgroup' ,
+            'aside'  , 'article'   , 'footer'  , 'header'   , 'nav'    ,
+            'section',
 
             'bold'      => 'b'  , 'italic'   => 'em' , 'parag'     => 'p',
             'overline'  => 'del', 'overtext' => 'sup', 'underline' => 'u',
@@ -44,19 +49,6 @@ class Html
         'media' =>
         [
             'embed', 'source'
-        ],
-
-        'contentAttribute' =>
-        [
-            'div'   , 'canvas'    , 'command' , 'datalist', 'details',
-            'dialog', 'figcaption', 'figure'  , 'mark'    , 'meter'  ,
-            'time'  , 'summary'   , 'progress', 'output'  ,
-        ],
-
-        'content' =>
-        [
-            'aside'  , 'article', 'footer',  'header', 'nav',
-            'section', 'hgroup'
         ]
     ];
 
@@ -430,43 +422,13 @@ class Html
     }
 
     /**
-     * Protected Content
-     */
-    protected function _content($html, $type)
-    {
-        $type = strtolower($type);
-
-        $perm = $this->settings['attr']['perm'] ?? NULL;
-
-        $this->outputElement .= $this->_perm($perm, "<$type>" . $this->stringOrCallback($html) . "</$type>");
-
-        return $this;
-    }
-
-    /**
-     * Protected Content Attribute
-     */
-    protected function _contentAttribute($content, $_attributes, $type)
-    {
-        $type   = strtolower($type);
-
-        $perm   = $this->settings['attr']['perm'] ?? NULL;
-        
-        $return = '<'.$type.$this->attributes($_attributes).'>'.$this->stringOrCallback($content)."</$type>".EOL;
-
-        $this->outputElement .= $this->_perm($perm, $return);
-
-        return $this;
-    }
-
-    /**
      * Protected Media
      */
-    protected function _media($src, $_attributes, $type)
+    protected function _media($src, $attributes, $type)
     {
         $perm = $this->settings['attr']['perm'] ?? NULL;
 
-        $this->outputElement .= $this->_perm($perm, '<'.strtolower($type).'src="'.$src.'"'.$this->attributes($_attributes).'>'.EOL);
+        $this->outputElement .= $this->_perm($perm, '<'.strtolower($type).' src="'.$src.'"'.$this->attributes($attributes).'>'.EOL);
 
         return $this;
     }
@@ -474,13 +436,13 @@ class Html
     /**
      * Protected Media Content
      */
-    protected function _mediaContent($src, $content, $_attributes, $type)
+    protected function _mediaContent($src, $content, $attributes, $type)
     {
         $type = strtolower($type);
 
         $perm = $this->settings['attr']['perm'] ?? NULL;
 
-        $this->outputElement .= $this->_perm($perm, '<'.$type.'src="'.$src.'"'.$this->attributes($_attributes).'>'.$this->stringOrCallback($content)."</$type>".EOL);
+        $this->outputElement .= $this->_perm($perm, '<'.$type.' src="'.$src.'"'.$this->attributes($attributes).'>'.$this->stringOrCallback($content)."</$type>".EOL);
     
         return $this;
     }
@@ -488,13 +450,15 @@ class Html
     /**
      * Protected Element
      */
-    protected function _multiElement($element, $str, $attributes = [])
+    protected function _multiElement($element, $str = '', $attributes = [])
     {
-        $element = strtolower($element);
+        $type   = strtolower($element);
 
-        $perm    = $this->settings['attr']['perm'] ?? NULL;
+        $perm   = $this->settings['attr']['perm'] ?? NULL;
+        
+        $return = '<'.$type.$this->attributes($attributes).'>'.$this->stringOrCallback($str)."</$type>".EOL;
 
-        $this->outputElement .= $this->_perm($perm, '<'.$element.$this->attributes($attributes).'>'.$this->stringOrCallback($str).'</'.$element.'>');
+        $this->outputElement .= $this->_perm($perm, $return);
 
         return $this;
     }
