@@ -82,6 +82,18 @@ trait CallableElements
             {
                 return $this->_media($parameters[0] ?? '', $parameters[1] ?? [], $realMethod);
             }
+
+            # Content Attribute
+            elseif( in_array($method, $this->elements['contentAttribute']) )
+            {
+                return $this->_contentAttribute($parameters[0] ?? '', $parameters[1] ?? [], $realMethod);
+            }
+
+            # Content
+            elseif( in_array($method, $this->elements['content']) )
+            {
+                return $this->_content($parameters[0] ?? '', $realMethod);
+            }
         }
         elseif( $className === 'Form' )
         {
