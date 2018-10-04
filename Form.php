@@ -14,6 +14,7 @@ use ZN\DataTypes\Arrays;
 use ZN\Request\Method;
 use ZN\Buffering;
 use ZN\Singleton;
+use ZN\Inclusion;
 use ZN\Base;
 
 class Form
@@ -66,6 +67,8 @@ class Form
      */
     public function open(String $name = NULL, Array $_attributes = [])
     {
+        $this->clearValidationSessions();
+
         $this->setFormName($name, $_attributes);
 
         $this->isEnctypeAttribute($_attributes);
@@ -89,6 +92,17 @@ class Form
         $this->outputElement .= $return;
 
         return $this;
+    }
+
+    /**
+     * Protected clear validation sessions
+     */
+    protected function clearValidationSessions()
+    {
+        $session = Singleton::class('ZN\Storage\Session');
+
+        $session->delete('FormValidationRules');
+        $session->delete('FormValidationMethod');
     }
 
     /**
@@ -125,6 +139,13 @@ class Form
     public function close()
     {
         unset($this->settings['getrow']);
+
+        if( isset($this->getJavascriptValidationFunction) )
+        {
+            $this->outputElement .= Inclusion\View::use('JavascriptValidationFunctions', $this->getJavascriptValidationFunction, true, __DIR__ . '/');
+
+            $this->getJavascriptValidationFunction = NULL;
+        }
 
         $this->outputElement .= '</form>' . EOL;
 
