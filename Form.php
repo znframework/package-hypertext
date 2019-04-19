@@ -52,6 +52,21 @@ class Form
     protected $method;
 
     /**
+     * Keeps update process row
+     * 
+     * @var object
+     */
+    protected $getUpdateRow;
+
+    /**
+     * Gets update process row
+     */
+    public function getUpdateRow()
+    {
+        return $this->getUpdateRow;
+    }
+
+    /**
      * Open form tag.
      * 
      * @param string $name        = NULL
@@ -740,7 +755,7 @@ class Form
                         )
                         ->update(strtolower($method).':'.$name);       
 
-                        $this->settings['getrow'] = $dbClass->where($whereColumn, $whereValue)->get($name)->row();
+                        $this->getUpdateRow = $this->settings['getrow'] = $dbClass->where($whereColumn, $whereValue)->get($name)->row();
                     }
                     elseif( $process === 'insert' )
                     {
