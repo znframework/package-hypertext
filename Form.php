@@ -165,9 +165,11 @@ class Form
 
         if( $this->validateUsageThisForm === true )
         {
-            $this->outputElement .= Buffering\Callback::do(function(){ $this->hidden('ValidationFormName', $this->getValidationFormName); });
+            $this->outputElement .= Buffering\Callback::do(function(){ return $this->hidden('ValidationFormName', $this->getValidationFormName); });
 
             $this->getValidationFormName = NULL;
+
+            $this->validateUsageThisForm = false;
         }
         
         $this->outputElement .= '</form>' . EOL;
@@ -782,7 +784,7 @@ class Form
                 }
             }
 
-            return Buffering\Callback::do(function(){ $this->hidden('FormProcessValue', 'FormProcessValue'); });
+            return Buffering\Callback::do(function(){ return $this->hidden('FormProcessValue', 'FormProcessValue'); });
         }
     }
 
