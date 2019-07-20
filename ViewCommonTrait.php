@@ -113,9 +113,7 @@ trait ViewCommonTrait
      */
     public function modalbox(String $id, Array $data = [])
     {
-        $attr = $this->settings['attr'];
         
-        $this->settings['attr'] = [];
 
         $data = 
         [
