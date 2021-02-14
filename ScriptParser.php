@@ -264,6 +264,8 @@ class ScriptParser
 				$i += $pattern[self::LENGTH];
 			}
 		}
+
+		return '';
 	}
 	
 	/**
