@@ -1,6 +1,5 @@
 {
     "name": "znframework/package-hypertext",
-    "version": "6.40.5.16",
     "description": "ZN Framework Hypertext Package",
     "license": "MIT",
     "homepage": "https://znframework.com",
@@ -13,15 +12,15 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "znframework/package-zerocore": "6.*",
-        "znframework/package-datatypes": "6.*",
-        "znframework/package-buffering": "6.*",
-        "znframework/package-protection": "6.*",
-        "znframework/package-authorization": "6.*",
-        "znframework/package-database": "6.*",
-        "znframework/package-validation": "6.*",
-        "znframework/package-request": "6.*",
-        "znframework/package-storage": "6.*"
+        "znframework/package-zerocore": ">=6.0",
+        "znframework/package-datatypes": ">=6.0",
+        "znframework/package-buffering": ">=6.0",
+        "znframework/package-protection": ">=6.0",
+        "znframework/package-authorization": ">=6.0",
+        "znframework/package-database": ">=6.0",
+        "znframework/package-validation": ">=6.0",
+        "znframework/package-request": ">=6.0",
+        "znframework/package-storage": ">=6.0"
 	},
     "autoload": {
         "psr-4": {
