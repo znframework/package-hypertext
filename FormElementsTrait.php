@@ -115,6 +115,8 @@ trait FormElementsTrait
      * Message control
      * 
      * @return string
+     * 
+     * @codeCoverageIgnore
      */
     public function vMessage(String $message)
     {
@@ -150,6 +152,16 @@ trait FormElementsTrait
     public function vCaptcha()
     {
         return $this->setJavascriptValidation('ZNValidationCaptcha', 'captcha');
+    }
+
+    /**
+     * Captcha control
+     * 
+     * @return string
+     */
+    public function vAnswer()
+    {
+        return $this->setJavascriptValidation('ZNValidationAnswer', 'answer');
     }
 
     /**
@@ -600,10 +612,12 @@ trait FormElementsTrait
 
             if( $type === 'checkbox' || $type === 'radio' )
             {
+                // @codeCoverageIgnoreStart
                 if( $method::$name() === $default )
                 {
                     $this->checked();
                 }    
+                // @codeCoverageIgnoreEnd
             }
             else
             {
@@ -646,7 +660,7 @@ trait FormElementsTrait
 
             if( $type === 'textarea' || $type === 'select' )
             {
-                return $value ?: $rowval;
+                return $value ?: $rowval; // @codeCoverageIgnore
             }
 
             $attributes['value'] = $value ?: $rowval;
@@ -654,12 +668,13 @@ trait FormElementsTrait
             // For radio
             if( $type === 'radio' && $value == $rowval )
             {
-                $attributes['checked'] = 'checked';
+                $attributes['checked'] = 'checked'; // @codeCoverageIgnore
             }
 
             // For checkbox
             if( $type === 'checkbox' )
             {
+                // @codeCoverageIgnoreStart
                 if( Json::check($rowval) )
                 {
                     $rowval = json_decode($rowval, true);
@@ -676,6 +691,7 @@ trait FormElementsTrait
                         $attributes['checked'] = 'checked';
                     }            
                 }
+                // @codeCoverageIgnoreEnd
             }
         }
 
