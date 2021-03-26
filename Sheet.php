@@ -76,7 +76,7 @@ class Sheet
      * 
      * @return $this
      */
-    public function attr(Array $attributes)
+    public function attr(array $attributes)
     {
         $this->attr = $this->_attr($attributes);
 
@@ -90,7 +90,7 @@ class Sheet
      * 
      * @return $this
      */
-    public function selector(String $selector)
+    public function selector(string $selector)
     {
         $this->selector = $selector;
 
@@ -104,7 +104,7 @@ class Sheet
      * 
      * @return string
      */
-    public function complete() : String
+    public function complete() : string
     {
         $trans = $this->transitions;
         $this->_defaultVariable();
@@ -119,7 +119,7 @@ class Sheet
      * 
      * @return string
      */
-    public function create(...$args) : String
+    public function create(...$args) : string
     {
         $combineTransitions = $args;
 
