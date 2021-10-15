@@ -50,7 +50,7 @@ trait ViewCommonTrait
         {
             if( is_numeric($key) )
             {
-                $attribute .= ' '.$values;
+                $attribute .= ' '.$values; // @codeCoverageIgnore
             }
             else
             {
@@ -146,6 +146,27 @@ trait ViewCommonTrait
     }
 
     /**
+     * On key wait event
+     * 
+     * @param callable $callback
+     * @param int      $time = 100
+     * 
+     * @return this
+     */
+    public function onkeywait($callback, int $time = 300)
+    {
+        $timer = 'timer' . md5(uniqid()); $callback = $this->stringOrCallback($callback);
+
+        $this->settings['attr']['onkeywaititem'] = $timer;
+
+        $compress = (new Script)->compress(function() use($timer, $time, $callback){ return "function {$timer}Function(callback, ms){var $timer = 0; return function(){var context = this, args = arguments; clearTimeout($timer); $timer = setTimeout(function(){callback.apply(context, args);}, ms || 0);};} $('input[onkeywaititem=\"$timer\"]').keyup({$timer}Function(function(e){ $callback }, $time));"; });
+
+        $this->settings['attr']['onkeywait'] = "<script>$compress</script>" . EOL;
+        
+        return $this;
+    }
+
+    /**
      * Protected string or callback
      */
     protected function stringOrCallback($content)
@@ -159,7 +180,7 @@ trait ViewCommonTrait
             return Buffering\Callback::do($content);
         }
 
-        throw new Exception\InvalidArgumentException('[$content] parameter must be [scalar] or [callable] type!');
+        throw new Exception\InvalidArgumentException('[$content] parameter must be [scalar] or [callable] type!'); // @codeCoverageIgnore
     }
 
     /**
@@ -179,7 +200,7 @@ trait ViewCommonTrait
             }
             else
             {
-                $result .= $part;
+                $result .= $part; // @codeCoverageIgnore
             }
 
             $result .= ' ';
@@ -190,6 +211,8 @@ trait ViewCommonTrait
 
     /**
      * Protected bootstrap class complement
+     * 
+     * @codeCoverageIgnore
      */
     protected function bootstrapClassComplement($class)
     {
@@ -209,11 +232,11 @@ trait ViewCommonTrait
     {
         if( $datatype === 'json' )
         {
-            $this->settings['serializer']['properties'] = 'dataType:"json",' . EOL;
+            $this->settings['serializer']['properties'] = 'dataType:"json",' . EOL; // @codeCoverageIgnore
         }
         elseif( is_array($datatype) )
         {
-            $this->settings['serializer']['properties'] = rtrim(ltrim(json_encode($datatype), '{'), '}') . ',' . PHP_EOL;
+            $this->settings['serializer']['properties'] = rtrim(ltrim(json_encode($datatype), '{'), '}') . ',' . PHP_EOL; // @codeCoverageIgnore
         }
     }
 
@@ -362,9 +385,9 @@ trait ViewCommonTrait
 
             if( isset($this->settings['attr'][$new]) )
             {
-                unset($this->settings['attr'][$new]);
+                unset($this->settings['attr'][$new]); // @codeCoverageIgnore
     
-                $this->settings['attr'][$oldEx[0]] = $oldEx[1]; 
+                $this->settings['attr'][$oldEx[0]] = $oldEx[1]; // @codeCoverageIgnore
             }
         } 
     }
@@ -407,7 +430,7 @@ trait ViewCommonTrait
                 }
                 else
                 {
-                    $this->settings['attr']['class'] .= ' form-control';
+                    $this->settings['attr']['class'] .= ' form-control'; // @codeCoverageIgnore
                 }
             }
         }
@@ -443,9 +466,19 @@ trait ViewCommonTrait
         }
     }
 
+    /**
+     * Protected create form input element by type
+     */
     protected function createFormInputElementByType($type, $attributes, &$return)
     {
-        $return .= '<input type="' . $type . '"' . $this->attributes($attributes) . '>' . EOL;
+        if( isset($this->settings['attr']['onkeywait']) )
+        {
+            $onkeywait = $this->settings['attr']['onkeywait'];
+
+            unset($this->settings['attr']['onkeywait']);
+        }
+
+        $return .= '<input type="' . $type . '"' . $this->attributes($attributes) . '>' . EOL . ( $onkeywait ?? NULL );
     }
 
     /**
@@ -463,10 +496,12 @@ trait ViewCommonTrait
                 {
                     $class = $type;
                 }
+                // @codeCoverageIgnoreStart
                 elseif( $class !== $type )
                 {
                     $class = Base::prefix($class, $type . ' ');
                 }
+                // @codeCoverageIgnoreEnd
             }
 
             $return .= '<div class="' . $class . '">' . EOL;
@@ -541,7 +576,7 @@ trait ViewCommonTrait
     {
         if( $value = $this->settings['label']['value'] )
         {
-            $this->settings['label']['value'] = Base::prefix($value, $type . '-');
+            $this->settings['label']['value'] = Base::prefix($value, $type . '-'); // @codeCoverageIgnore
         }
         
         $return .= '<label'.$this->createAttribute('class', $this->settings['label']['value']).'>' . EOL;
@@ -584,7 +619,7 @@ trait ViewCommonTrait
         {
             if( Authorization\PermissionExtends::$roleId === NULL )
             {
-                throw new Exception\PermissionRoleIdException();
+                throw new Exception\PermissionRoleIdException(); // @codeCoverageIgnore
             }
 
             return Authorization\Process::use($perm, $return);
