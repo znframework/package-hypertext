@@ -195,6 +195,8 @@ class ScriptParser
 		
 	/**
 	 * reset
+	 * 
+	 * @codeCoverageIgnore
 	 */
 	public function reset() 
 	{
@@ -222,7 +224,7 @@ class ScriptParser
 	{
 		if( empty($arguments) ) 
 		{
-			return '';
+			return ''; // @codeCoverageIgnore
 		}
 		
 		$i = 1; $j = 0;
@@ -265,7 +267,7 @@ class ScriptParser
 			}
 		}
 
-		return '';
+		return ''; // @codeCoverageIgnore
 	}
 	
 	/**
@@ -279,7 +281,7 @@ class ScriptParser
 
 		while( $i ) 
 		{
-			$replacement = str_replace('$'.$i--, $match[$offset + $i], $replacement);
+			$replacement = str_replace('$'.$i--, $match[$offset + $i] ?? '', $replacement ?? '');
 		}
 
 		return $replacement;
@@ -290,10 +292,10 @@ class ScriptParser
 	 */
 	protected function replaceName($match, $offset)
 	{
-		$length = strlen($match[$offset + 2]);
-		$start  = $length - max($length - strlen($match[$offset + 3]), 0);
+		$length = strlen($match[$offset + 2] ?? '');
+		$start  = $length - max($length - strlen($match[$offset + 3] ?? ''), 0);
 
-		return substr($match[$offset + 1], $start, $length) . $match[$offset + 4];
+		return substr($match[$offset + 1] ?? '', $start, $length) . ($match[$offset + 4] ?? '');
 	}
 	
 	/**
@@ -361,7 +363,7 @@ class ScriptParser
 		} 
 		else 
 		{
-			$temp = '';
+			$temp = ''; // @codeCoverageIgnore
 		}
 
 		$this->buffer['i']++;
